@@ -1,5 +1,14 @@
 import vpython as vp
 import numpy as np
+import matplotlib.pyplot as mp
+# from PIL import Image
+#
+# image = Image.open('Force of Gravity.jpg')
+# print(image.format)
+# print(image.mode)
+# print(image.size)
+#
+# image.show()
 
 # Simulation parameters
 #    Sun
@@ -9,14 +18,16 @@ sun_initial_position = vp.vector(0., 0., 0.)
 
 #    Mars
 mars_radius = 25
-mars_color = vp.color.red
+mars_color = vp.color.green
+mars1_color = vp.color.blue
+mars2_color = vp.color.magenta
 mars_initial_position = vp.vector(0., 8.*sun_radius, 0.)
 mars_initial_position1 = vp.vector(0., 5.*sun_radius, 0.)
-mars_initial_position2 = vp.vector(1., 3*sun_radius, 1.)
+mars_initial_position2 = vp.vector(0., 3.*sun_radius, 0.)
 
-mars_initial_velocity = vp.vector(-0.275, 0., 0.)
-mars_initial_velocity1 = vp.vector(0.25, 0., 0.)
-mars_initial_velocity2 = vp.vector(-0.26, 0., 0.)
+mars_initial_velocity = vp.vector(-0.274, 0., 0.)
+mars_initial_velocity1 = vp.vector(0.285, 0., 0.)
+mars_initial_velocity2 = vp.vector(-0.28, 0.28, 0.)
 
 # must change further arguments to implement different initial conditions
 
@@ -24,56 +35,61 @@ mars_initial_velocity2 = vp.vector(-0.26, 0., 0.)
 gravitational_constant = 1.  # 6.67e-11 N m^2 / kg^2
 
 # Define animation parameters
-animation_time_step = 0.001  # seconds
+animation_time_step = 0.01  # seconds
 rate_of_animation = 1 / animation_time_step
-time_step = 1.
-stop_time = 25000.
+time_step = 2.
+stop_time = 20000.
 
-
-# Plots of analytic solution
-time_rate = 0.1
 
 # mars_initial
 mars_position = (((mars_initial_velocity.x**2) + (mars_initial_velocity.y**2)) / 2) * time_step
 
-position_plot_field = vp.graph(title='X_Position vs. Time', xtitle=r't [s]', ytitle='x [km]', fast=False)
-position_points = vp.gdots(graph=position_plot_field, color=vp.color.green, size=0.1)
+position_plot_field = vp.graph(title='Position vs. Time', xtitle='Time', ytitle='Position', fast=True)
+position_points = vp.gcurve(graph=position_plot_field, color=vp.color.green, size=0.1)
 mars_position_curve = vp.gcurve(graph=position_plot_field,
                                data=[[0, mars_position], [stop_time, mars_position]],
-                               color=vp.color.magenta)
-velocity_plot_field = vp.graph(title='X_Velocity vs. Time', xtitle=r't [s]', ytitle='v [km/s]', fast=False)
-mars_velocity_points = vp.gdots(graph=velocity_plot_field, color=vp.color.black, size=0.1)
+                               color=vp.color.green)
+velocity_plot_field = vp.graph(title='Velocity vs. Time', xtitle='Time', ytitle='Velocity', fast=True)
+mars_velocity_points = vp.gcurve(graph=velocity_plot_field, color=vp.color.green, size=0.1)
+
+phase_space = vp.graph(title='Phase Space Diagram', xtitle='Position', ytitle='Velocity', fast=True)
+phase_space_points = vp.gcurve(graph=phase_space, color=vp.color.green, size=0.1)
 
 # mars_initial1
 mars1_position = (((mars_initial_velocity1.x**2) + (mars_initial_velocity1.y**2)) / 2) * time_step
 
-position1_plot_field = vp.graph(title='X_Position1 vs. Time', xtitle=r't [s]', ytitle='x [km]', fast=False)
-position1_points = vp.gdots(graph=position1_plot_field, color=vp.color.green, size=0.1)
+position1_plot_field = vp.graph(title='Position1 vs. Time', xtitle='Time', ytitle='Position1', fast=True)
+position1_points = vp.gcurve(graph=position1_plot_field, color=vp.color.blue, size=0.1)
 mars1_position_curve = vp.gcurve(graph=position1_plot_field,
                                data=[[0, mars1_position], [stop_time, mars1_position]],
-                               color=vp.color.cyan)
-velocity1_plot_field = vp.graph(title='X_Velocity1 vs. Time', xtitle=r't [s]', ytitle='v [km/s]', fast=False)
-mars1_velocity_points = vp.gdots(graph=velocity1_plot_field, color=vp.color.blue, size=0.1)
+                               color=vp.color.blue)
+velocity1_plot_field = vp.graph(title='Velocity1 vs. Time', xtitle='Time', ytitle='Velocity', fast=True)
+mars1_velocity_points = vp.gcurve(graph=velocity1_plot_field, color=vp.color.blue, size=0.1)
+phase_space1 = vp.graph(title='Phase Space Diagram 1', xtitle='Position', ytitle='Velocity', fast=True)
+phase_space1_points = vp.gcurve(graph=phase_space1, color=vp.color.blue, size=0.1)
 
 # mars_initial2
 mars2_position = (((mars_initial_velocity2.x**2) + (mars_initial_velocity2.y**2)) / 2) * time_step
 
-position2_plot_field = vp.graph(title='X_Position2 vs. Time', xtitle=r't [s]', ytitle='x [km]', fast=False)
-position2_points = vp.gdots(graph=position2_plot_field, color=vp.color.green, size=0.1)
+position2_plot_field = vp.graph(title='Position2 vs. Time', xtitle='Time', ytitle='Position', fast=True)
+position2_points = vp.gcurve(graph=position2_plot_field, color=vp.color.magenta, size=0.1)
 mars2_position_curve = vp.gcurve(graph=position2_plot_field,
                                data=[[0, mars2_position], [stop_time, mars2_position]],
-                               color=vp.color.red)
-velocity2_plot_field = vp.graph(title='X_Velocity2 vs. Time', xtitle=r't [s]', ytitle='v [km/s]', fast=False)
-mars2_velocity_points = vp.gdots(graph=velocity2_plot_field, color=vp.color.blue, size=0.1)
+                               color=vp.color.magenta)
+velocity2_plot_field = vp.graph(title='Velocity2 vs. Time', xtitle='Time', ytitle='Velocity', fast=True)
+mars2_velocity_points = vp.gcurve(graph=velocity2_plot_field, color=vp.color.magenta, size=0.1)
+phase_space2 = vp.graph(title='Phase Space Diagram 2', xtitle='Position', ytitle='Velocity', fast=True)
+phase_space2_points = vp.gcurve(graph=phase_space2, color=vp.color.magenta, size=0.1)
+
 
 # Set initial conditions
 time = 0.
 
-# Create spheres
+# Create spheres in vpython
 sun = vp.sphere(radius=sun_radius, pos=sun_initial_position, color=sun_color)
 mars = vp.sphere(radius=mars_radius, pos=mars_initial_position, color=mars_color, make_trail=True)
-mars1 = vp.sphere(radius=mars_radius, pos=mars_initial_position1, color=mars_color)
-mars2 = vp.sphere(radius=mars_radius, pos=mars_initial_position2, color=mars_color)
+mars1 = vp.sphere(radius=mars_radius, pos=mars_initial_position1, color=mars1_color, make_trail=True)
+mars2 = vp.sphere(radius=mars_radius, pos=mars_initial_position2, color=mars2_color, make_trail=True)
 
 # Define properties of objects
 mars.mass = 1.
@@ -139,14 +155,19 @@ while time < stop_time:
     mars1.acceleration = gravitational_force1 / mars.mass
     mars2.acceleration = gravitational_force2 / mars.mass
 
+    # Plots of r(t), v(t), and v(r)
+
     mars_position_curve.plot(pos=(time, mars.pos.x))
     mars_velocity_points.plot(pos=(time, (mars.velocity.x)**2 + (mars.velocity.y)**2))
+    phase_space_points.plot(pos=(mars.pos.x, (mars.velocity.x)**2 + (mars.velocity.y)**2))
 
     mars1_position_curve.plot(pos=(time, mars1.pos.x))
     mars1_velocity_points.plot(pos=(time, (mars1.velocity.x)**2 + (mars1.velocity.y)**2))
+    phase_space1_points.plot(pos=(mars1.pos.x, (mars1.velocity.x)**2 + (mars1.velocity.y)**2))
 
     mars2_position_curve.plot(pos=(time, mars2.pos.x))
     mars2_velocity_points.plot(pos=(time, (mars2.velocity.x)**2 + (mars2.velocity.y)**2))
+    phase_space2_points.plot(pos=(mars2.pos.x, (mars2.velocity.x)**2 + (mars2.velocity.y)**2))
 
     # Move time forward
     time += time_step
